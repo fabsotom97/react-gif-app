@@ -2,22 +2,25 @@ import { useState } from "react";
 import type { Gif } from "../interfaces/gif.interface";
 import { getGifsByQuery } from "../actions/get-gifs-by-query.action";
 
-export interface InitialValues {
+export interface InitialValuesProps {
     gifs: Gif[];
     previousTerms: string[];
 }
+// outside the hook to avoid re-rendering the component when the cache is updated
+const gifsCache: Record<string, Gif[]> = {};
 
-export interface UseGifsProps {
-    initialValues: InitialValues;
-}
+export const useGifs = (initialValues: InitialValuesProps) => {
 
-export const useGifs = (props: UseGifsProps) => {
+    const [gifs, setGifs] = useState<Gif[]>(initialValues.gifs);
+    const [previousTerms, setPreviousTerms] = useState<string[]>(initialValues.previousTerms);
 
-    const [gifs, setGifs] = useState<Gif[]>(props.initialValues.gifs);
-    const [previousTerms, setPreviousTerms] = useState<string[]>(props.initialValues.previousTerms);
-
-    const handleTermClicked = (term: string) => {
-        console.log({ term });
+    const handleTermClicked = async (term: string) => {
+        if (gifsCache[term]) {
+            setGifs(gifsCache[term]);
+            return;
+        }
+        const gifs = await getGifsByQuery(term);
+        setGifs(gifs);
     };
 
     const handleSearch = async (query: string = '') => {
@@ -31,6 +34,8 @@ export const useGifs = (props: UseGifsProps) => {
 
         const gifs = await getGifsByQuery(query);
         setGifs(gifs);
+
+        gifsCache[query] = gifs;
     };
 
     return {

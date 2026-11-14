@@ -6,12 +6,10 @@ import { SearchBar } from './shared/components/SearchBar';
 import { useGifs } from './gifs/hooks/useGifs';
 
 export const GifsApp = () => {
-  
+
   const { gifs, previousTerms, handleTermClicked, handleSearch } = useGifs({
-    initialValues: {
-      gifs: [],
-      previousTerms: []
-    }
+    gifs: [],
+    previousTerms: []
   });
 
   return (
