@@ -21,6 +21,8 @@ export const useGifs = (initialValues: InitialValues = {}) => {
         }
         const gifs = await getGifsByQuery(term);
         setGifs(gifs);
+
+        gifsCache.current[term] = gifs;
     };
 
     const handleSearch = async (query: string = '') => {
