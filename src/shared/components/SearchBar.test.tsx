@@ -64,4 +64,10 @@ describe('SearchBar', () => {
         expect(onQuery).toHaveBeenCalledOnce();
         expect(onQuery).toHaveBeenCalledWith('test');
     });
+
+    test('should the input have the correct placeholder value', () => {
+        const placeholder = "Search something interesting";
+        render(<SearchBar onQuery={() => { }} placeholder={placeholder} />);
+        expect(screen.getByPlaceholderText(placeholder)).toBeDefined();
+    });
 });
