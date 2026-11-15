@@ -2,15 +2,15 @@ import { useRef, useState } from "react";
 import type { Gif } from "../interfaces/gif.interface";
 import { getGifsByQuery } from "../actions/get-gifs-by-query.action";
 
-export interface InitialValuesProps {
-    gifs: Gif[];
-    previousTerms: string[];
+export interface InitialValues {
+    gifs?: Gif[];
+    previousTerms?: string[];
 }
 
-export const useGifs = (initialValues: InitialValuesProps) => {
+export const useGifs = (initialValues: InitialValues = {}) => {
 
-    const [gifs, setGifs] = useState<Gif[]>(initialValues.gifs);
-    const [previousTerms, setPreviousTerms] = useState<string[]>(initialValues.previousTerms);
+    const [gifs, setGifs] = useState<Gif[]>(initialValues.gifs ?? []);
+    const [previousTerms, setPreviousTerms] = useState<string[]>(initialValues.previousTerms ?? []);
 
     const gifsCache = useRef<Record<string, Gif[]>>({});
 
