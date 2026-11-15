@@ -50,4 +50,18 @@ describe('SearchBar', () => {
         });
     });
 
+    test('should call onQuery when button is clicked with an input value', () => {
+
+        const onQuery = vi.fn();
+        render(<SearchBar onQuery={onQuery} />);
+
+        const input = screen.getByRole('textbox');
+        fireEvent.change(input, { target: { value: 'test' } });
+
+        const button = screen.getByRole('button');
+        fireEvent.click(button);
+
+        expect(onQuery).toHaveBeenCalledOnce();
+        expect(onQuery).toHaveBeenCalledWith('test');
+    });
 });
