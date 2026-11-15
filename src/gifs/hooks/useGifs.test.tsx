@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { act, renderHook } from '@testing-library/react';
 import { useGifs } from "./useGifs";
 import * as gifActions from "../actions/get-gifs-by-query.action";
+import { gifsMock } from "../../tests/mocks/gifs.data";
 
 describe('useGifs', () => {
 
@@ -17,6 +18,11 @@ describe('useGifs', () => {
     test('should return a list of gifs', async () => {
 
         const { result } = renderHook(() => useGifs());
+
+        // preventing from calling the actual API
+        vi.spyOn(gifActions, 'getGifsByQuery')
+            .mockResolvedValue(gifsMock);
+
         await act(async () => {
             // invoke/fire the search
             await result.current.handleSearch('goku');
@@ -38,6 +44,10 @@ describe('useGifs', () => {
 
     test('should return a list of gis from cache', async () => {
         const { result } = renderHook(() => useGifs());
+        // preventing from calling the actual API
+        vi.spyOn(gifActions, 'getGifsByQuery')
+            .mockResolvedValue(gifsMock);
+
         await act(async () => {
             // invoke/fire the search
             await result.current.handleTermClicked('goku');
@@ -61,7 +71,7 @@ describe('useGifs', () => {
     test('should not return more than 8 previous terms', async () => {
 
         const { result } = renderHook(() => useGifs());
-
+        // preventing from calling the actual API
         vi.spyOn(gifActions, 'getGifsByQuery')
             .mockResolvedValue([]);
 
