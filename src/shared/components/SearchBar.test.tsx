@@ -28,4 +28,26 @@ describe('SearchBar', () => {
             expect(onQuery).not.toHaveBeenCalledWith('test2');
         });
     });
+
+    test('should call only once with the last input (debounce)', async () => {
+
+        const onQuery = vi.fn();
+        render(<SearchBar onQuery={onQuery} />);
+
+        const input = screen.getByRole('textbox');
+        // re-creating the user typing
+        fireEvent.change(input, { target: { value: 't' } });
+        fireEvent.change(input, { target: { value: 'te' } });
+        fireEvent.change(input, { target: { value: 'tes' } });
+        fireEvent.change(input, { target: { value: 'test' } });
+
+        await waitFor(() => {
+            expect(onQuery).toHaveBeenCalledOnce();
+            expect(onQuery).not.toHaveBeenCalledWith('t');
+            expect(onQuery).not.toHaveBeenCalledWith('te');
+            expect(onQuery).not.toHaveBeenCalledWith('tes');
+            expect(onQuery).toHaveBeenCalledWith('test');
+        });
+    });
+
 });
